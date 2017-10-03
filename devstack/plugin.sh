@@ -134,7 +134,7 @@ function _gnocchi_install_grafana {
     sudo -u grafana mkdir -p /var/lib/grafana/plugins
     sudo rm -rf /var/lib/grafana/plugins/grafana-gnocchi-datasource
     if [ ! "$GRAFANA_PLUGIN_VERSION" ]; then
-        sudo grafana-cli plugins install gnocchixyz-gnocchi-datasource
+        sudo -E grafana-cli plugins install gnocchixyz-gnocchi-datasource
     elif [ "$GRAFANA_PLUGIN_VERSION" != "git" ]; then
         tmpfile=/tmp/gnocchixyz-gnocchi-datasource-${GRAFANA_PLUGIN_VERSION}.tar.gz
         wget https://github.com/gnocchixyz/grafana-gnocchi-datasource/releases/download/${GRAFANA_PLUGIN_VERSION}/gnocchixyz-gnocchi-datasource-${GRAFANA_PLUGIN_VERSION}.tar.gz -O $tmpfile
@@ -360,7 +360,7 @@ function install_gnocchi {
     [ "$GNOCCHI_USE_KEYSTONE" == "True" ] && EXTRA_FLAVOR=,keystone
 
     # We don't use setup_package because we don't follow openstack/requirements
-    sudo -H pip install -e "$GNOCCHI_DIR"[test,$GNOCCHI_STORAGE_BACKEND,${DATABASE_TYPE}${EXTRA_FLAVOR}]
+    sudo -E -H pip install -e "$GNOCCHI_DIR"[test,$GNOCCHI_STORAGE_BACKEND,${DATABASE_TYPE}${EXTRA_FLAVOR}]
 
     if [ "$GNOCCHI_DEPLOY" == "mod_wsgi" ]; then
         install_apache_wsgi
